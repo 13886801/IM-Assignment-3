@@ -44,7 +44,7 @@ class UIArea extends NonInteractableObject {
     //Simply the line dividing the drawingArea and UI.
     stroke(palette.get("White"));
     line(0, height * 0.8, width, height * 0.8);
-    stroke(palette.get("Invisible"));
+    hideStroke();
     
     buttons.forEach((btn)->{
       btn.display();
@@ -54,9 +54,9 @@ class UIArea extends NonInteractableObject {
   void cycleTutorial() {
     Button btn = buttons.get(0); //Hard coded to be 0, which is the "How to use" button
     if (btn.text.contains("1/4")) {
-      btn.text = "(2/4) Randomly click in the space above to place dots around. Place 9 or more around.";
+      btn.text = "(2/4) Left/right click in the space above to place shapes around. The type of click sets the rotation\ndirection.";
     } else if (btn.text.contains("2/4")) {
-      btn.text = "(3/4) Once there are at least 9 dots, generate a parallax effect with the triangles on the screen.";
+      btn.text = "(3/4) Once there are at least 2 shapes, generate a parallax effect with them on the screen.";
     } else if (btn.text.contains("3/4")) {
       btn.text = "(4/4) Repeat 2 and 3 at least 3 times. Once done, click finish drawing to see the accumulated result.";
     } else if (btn.text.contains("4/4")) {

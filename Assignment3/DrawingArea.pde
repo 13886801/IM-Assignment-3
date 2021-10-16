@@ -1,43 +1,55 @@
 class DrawingArea extends InteractableObject {
-  PGraphics Area;
-  ArrayList<Location> locations;
+  PGraphics area;
+  ArrayList<Polygon> polygons;
   float locationSize;
   
   DrawingArea(float x, float y, int w, int h) {
     super(x, y, w, h);
-    Area = createGraphics(w, h);
+    area = createGraphics(w, h);
     
-    locations = new ArrayList<Location>();
+    polygons = new ArrayList<Polygon>();
     locationSize = 15;
     
     palette.put("Light Gray", color(64, 68, 75));
   }
   
   @Override void update() {
-    Area.beginDraw();
-    
-    Area.background(palette.get("Invisible"));
-    Area.fill(palette.get("Light Gray"));
-    for (Location loc : locations) {
-      Area.circle(loc.x, loc.y, locationSize);
+    for (Polygon shapes : polygons) {
+      shapes.update();
     }
-    
-    if (mouseOver()) { //When hovering in the area
-      Area.fill(palette.get("Light Gray"));
-      Area.circle(mouseX, mouseY, locationSize);
-      if (mouseState.get("Left Click")) {
-        locations.add(new Location(mouseX, mouseY, locationSize));
-      }
-    }
-    
-    Area.endDraw();
   }
   
   @Override void display() {
-    image(Area, x, y);
+    area.beginDraw();
+    
+    area.background(palette.get("Invisible"));
+    area.fill(palette.get("Light Gray"));
+    for (Polygon shapes : polygons) {
+      shapes.display();
+    }
+    
+    if (polygons.size() != 0) {
+      Polygon shape = polygons.get(polygons.size() - 1);
+      if (shape.isFocused) {
+        float newRad = sqrt(pow(mouseX - shape.x, 2) + pow(mouseY - shape.y, 2)); 
+        shape.radius = min(max(30, newRad), 200);
+      }
+    }
+    
+    if (mouseOver()) { //When hovering in the area
+      area.fill(palette.get("Light Gray"));
+      area.circle(mouseX, mouseY, locationSize);
+      if (mouseState.get("Left Click") || mouseState.get("Right Click")) { //Either left or right click.
+        polygons.add(new Polygon(mouseX, mouseY));
+      }
+    }
+    
+    area.endDraw();
+    
+    image(area, x, y);
   }
   
   void clearArea() {
-    locations.clear();
+    polygons.clear();
   }
 }

@@ -28,6 +28,10 @@ abstract class IntangibleObject implements Entity {
     update();
     display();
   }
+  
+  void hideStroke() { //Makes the stroke invisible.
+    stroke(palette.get("Invisible"));
+  }
 }
 
 abstract class TangibleObject extends IntangibleObject {
