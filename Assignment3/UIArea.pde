@@ -25,7 +25,6 @@ class UIArea extends NonInteractableObject {
       Button btn = new Button(btnX, btnY, btnW, btnH, labels[i][0]);
       btn.setText(labels[i][1]);
       buttons.add(btn);
-      
     }
     
     palette.put("UI", color(32, 34, 37)); //Slightly lighter than background.

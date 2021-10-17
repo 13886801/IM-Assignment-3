@@ -45,6 +45,10 @@ class Main extends IntangibleObject {
       layers.get(layers.size() - 1).clearArea();
       return;
       
+      case "Generate parallax":
+      layers.get(0).connect();
+      return;
+      
       default:
       println("Unknown command: " + command);
       return;
