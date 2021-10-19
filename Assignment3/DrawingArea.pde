@@ -66,12 +66,16 @@ class DrawingArea extends InteractableObject {
   }
   
   void parallaxMode() {
-    area.stroke(palette.get("White"));
+    area.beginShape();
+    area.fill(0, 255, 0);
+    //area.stroke(palette.get("White"));
     for (int i = 0; i < locations.size(); i++) {
       Location current = locations.get(i);
-      Location next = locations.get((i + 1) % locations.size());
-      area.line(current.x, current.y, next.x, next.y);
+      area.vertex(current.x, current.y);
+      //Location next = locations.get((i + 1) % locations.size());
+      //area.line(current.x, current.y, next.x, next.y);
     }
-    area.stroke(palette.get("Invisible"));
+    //area.stroke(palette.get("Invisible"));
+    area.endShape(CLOSE);
   }
 }
