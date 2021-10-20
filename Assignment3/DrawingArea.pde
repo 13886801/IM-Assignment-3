@@ -13,9 +13,18 @@ class DrawingArea extends InteractableObject {
     palette.put("Light Gray", color(64, 68, 75));
   }
   
+  @Override boolean isClickedCheck() {
+    return isHovering && mouseState.get("Left Click") || mouseState.get("Right Click");
+  }
+  
   @Override void update() {
+    super.update();
     for (Polygon shapes : polygons) {
       shapes.update();
+    }
+    
+    if (isClicked) { //Either left or right click.
+      polygons.add(new Polygon(mouseX, mouseY));
     }
   }
   
@@ -28,25 +37,14 @@ class DrawingArea extends InteractableObject {
       shapes.display();
     }
     
-    if (polygons.size() != 0) {
-      Polygon shape = polygons.get(polygons.size() - 1);
-      if (shape.isFocused) {
-        float newRad = sqrt(pow(mouseX - shape.x, 2) + pow(mouseY - shape.y, 2)); 
-        shape.radius = min(max(30, newRad), 200);
-      }
-    }
-    
-    if (mouseOver()) { //When hovering in the area
+    if (isHovering) { //When hovering in the area
       area.fill(palette.get("Light Gray"));
       area.circle(mouseX, mouseY, locationSize);
-      if (mouseState.get("Left Click") || mouseState.get("Right Click")) { //Either left or right click.
-        polygons.add(new Polygon(mouseX, mouseY));
-      }
     }
     
     area.endDraw();
     
-    image(area, x, y);
+    image(area, pos.x, pos.y);
   }
   
   void clearArea() {

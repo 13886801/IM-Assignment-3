@@ -28,19 +28,13 @@ abstract class IntangibleObject implements Entity {
     update();
     display();
   }
-  
-  void hideStroke() { //Makes the stroke invisible.
-    stroke(palette.get("Invisible"));
-  }
 }
 
 abstract class TangibleObject extends IntangibleObject {
-  float x; //x position of the object
-  float y; //y position of the object
+  PVector pos; //The position of the object
   TangibleObject (float x, float y) {
     super();
-    this.x = x;
-    this.y = y;
+    pos = new PVector(x, y);
   }
 }
 
@@ -57,6 +51,7 @@ abstract class NonInteractableObject extends TangibleObject {
 
 abstract class InteractableObject extends NonInteractableObject {
   boolean isHovering;
+  boolean isClicked;
   
   InteractableObject(float x, float y, float w, float h) {
     super(x, y, w, h);
@@ -65,26 +60,36 @@ abstract class InteractableObject extends NonInteractableObject {
   
   @Override void update() {
     isHovering = mouseOver();
-    if (isHovering && mouseState.get("Left Click")) {
-      doAction();
+    isClicked = isClickedCheck();
+    if (isHovering) {
+      doHover();
+      if (isClicked) {
+        doAction();
+      }
     }
   }
   
+  void doHover() {} //Meant to be overridden
   void doAction() {} //Meant to be overridden
   
+  boolean isClickedCheck() { //Can be overridden
+    return isHovering && mouseState.get("Left Click");
+  }
+  
   /*
-    Is the mouse colliding with the bounding box of object?
+  Is the mouse colliding with the bounding box of object?
    - It naturally goes by corner.
+   - Can be overriden (not recommended, unless it is context specific)
    
    Parameters:
    offsetX - Offsets the collision detection by given float in x axis
    offsetY - Offsets the collision detection by given float in y axis
    */
   boolean mouseOver(float offsetX, float offsetY) {
-    boolean left = x + offsetX < mouseX;
-    boolean right = x + offsetX + w > mouseX;
-    boolean top = y + offsetY < mouseY;
-    boolean bottom = y + offsetY + h > mouseY;
+    boolean left = pos.x + offsetX < mouseX;
+    boolean right = pos.x + offsetX + w > mouseX;
+    boolean top = pos.y + offsetY < mouseY;
+    boolean bottom = pos.y + offsetY + h > mouseY;
 
     return left && right && top && bottom;
   }

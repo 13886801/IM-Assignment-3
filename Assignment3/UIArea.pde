@@ -7,25 +7,32 @@ class UIArea extends NonInteractableObject {
     buttons = new ArrayList<Button>();
     float padX = width * 0.075; //Calculated for one side
     float spaceX = width * 0.01; //Spacing between each button
-    float btnW = width * 0.2;
+    float btnW = width * 0.1;
     
-    float padY = height * 0.05;
-    float btnH = height * 0.1;
+    float padY = height * 0.03;
+    float btnY = pos.y + padY;
     
+    float btnH = height * 0.05;
+    
+    buttons.add(new TutorialButton(padX, btnY, btnW, btnH, "How to use"));
     String[][] labels = {
-      {"How to use", "(1/4) Click this button to cycle through the pages on how to use it."},
       {"Clear", "Clear all points and triangles from the screen."},
       {"Generate parallax", "Generate parallax on all triangles. At least have nine points on the screen."},
       {"End drawing", "Finish the parallax and fly through your creation."}
     };
     
-    for (int i = 0; i < 4; i++) {
-      float btnX = padX + (spaceX + btnW) * i;
-      float btnY = height - btnH - padY;
+    float smallFS = Integer.MAX_VALUE; //Smallest font size
+    for (int i = 0; i < labels.length; i++) {
+      float btnX = padX + (spaceX + btnW) * (i + 1);
       Button btn = new Button(btnX, btnY, btnW, btnH, labels[i][0]);
       btn.setText(labels[i][1]);
       buttons.add(btn);
-      
+      smallFS = btn.sizeOfFont < smallFS ? btn.sizeOfFont : smallFS;
+    }
+    
+    //Helps make all the buttons a consistent size
+    for (Button btn : buttons) {
+      btn.sizeOfFont = smallFS;
     }
     
     palette.put("UI", color(32, 34, 37)); //Slightly lighter than background.
@@ -39,12 +46,12 @@ class UIArea extends NonInteractableObject {
   
   @Override void display() {
     fill(palette.get("UI"));
-    rect(x, y, w, h);
+    rect(pos.x, pos.y, w, h);
     
     //Simply the line dividing the drawingArea and UI.
     stroke(palette.get("White"));
     line(0, height * 0.8, width, height * 0.8);
-    hideStroke();
+    noStroke();
     
     buttons.forEach((btn)->{
       btn.display();
@@ -52,15 +59,7 @@ class UIArea extends NonInteractableObject {
   }
   
   void cycleTutorial() {
-    Button btn = buttons.get(0); //Hard coded to be 0, which is the "How to use" button
-    if (btn.text.contains("1/4")) {
-      btn.text = "(2/4) Left/right click in the space above to place shapes around. The type of click sets the rotation\ndirection.";
-    } else if (btn.text.contains("2/4")) {
-      btn.text = "(3/4) Once there are at least 2 shapes, generate a parallax effect with them on the screen.";
-    } else if (btn.text.contains("3/4")) {
-      btn.text = "(4/4) Repeat 2 and 3 at least 3 times. Once done, click finish drawing to see the accumulated result.";
-    } else if (btn.text.contains("4/4")) {
-      btn.text = "(1/4) Click this button to cycle through the pages on how to use it.";
-    }
+    TutorialButton btn = (TutorialButton)buttons.get(0); //Hard coded to be 0, which is the "How to use" button
+    btn.cycleTutorial();
   }
 }

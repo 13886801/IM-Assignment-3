@@ -5,6 +5,7 @@ class Main extends IntangibleObject {
   private ArrayList<DrawingArea> layers;
   private UIArea uiArea;
   
+  
   Main() {
     super();
     layers = new ArrayList<DrawingArea>();
@@ -43,6 +44,10 @@ class Main extends IntangibleObject {
       
       case "Clear":
       layers.get(layers.size() - 1).clearArea();
+      return;
+      
+      case "Generate parallax":
+      println("Ok");
       return;
       
       default:
