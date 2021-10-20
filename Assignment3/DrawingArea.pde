@@ -19,12 +19,14 @@ class DrawingArea extends InteractableObject {
   
   @Override void update() {
     super.update();
-    for (Polygon shapes : polygons) {
-      shapes.update();
-    }
-    
     if (isClicked) { //Either left or right click.
       polygons.add(new Polygon(mouseX, mouseY));
+    }
+    
+    for (int i = 0; i < polygons.size(); i++) {
+      Polygon shape = polygons.get(i);
+      shape.update();
+      shape.newOffsetZ(polygons.size() - 1 - i);
     }
   }
   

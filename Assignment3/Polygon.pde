@@ -32,7 +32,7 @@ class Polygon extends TangibleObject {
     }
   }
   
-  @Override void display() {
+  @Override void display() {    
     translate(pos.x, pos.y);
     rotate(radians(rotation));
 
@@ -49,5 +49,9 @@ class Polygon extends TangibleObject {
     
     noStroke();
     resetMatrix();//Reset the canvas back to it's original state
+  }
+  
+  void newOffsetZ(int z) {
+    pos.z = z;
   }
 }

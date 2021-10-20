@@ -30,5 +30,5 @@ void draw() {
   updateMouseStates(); //Ensures certain mouse states.
   getDeltaTime(); //Get the time since last loop.
   
-  println(frameRate);                                    //DEBUG: Simply prints the framerate, get rid of this later
+  println("Number of shapes: " + main.layers.get(0).polygons.size() + " The framerate: " + frameRate);                                    //DEBUG: Simply prints the framerate, get rid of this later
 }

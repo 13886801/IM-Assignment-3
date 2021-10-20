@@ -2,7 +2,7 @@
 There should only be one.
 */
 class Main extends IntangibleObject {
-  private ArrayList<DrawingArea> layers;
+  ArrayList<DrawingArea> layers;
   private UIArea uiArea;
   
   
