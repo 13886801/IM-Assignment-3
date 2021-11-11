@@ -2,17 +2,18 @@
 There should only be one.
 */
 class Main extends IntangibleObject {
-  String currentMode; //The current mode of the program
-  float modeTextSize; //The size of the text indicating the current mode.
+  Message currentMode;
 
+  private NotificationSystem notifySystem;
   private ArrayList<DrawingArea> layers;
   private UIArea uiArea;
 
   Main() {
-    super(false);
-    currentMode = "Edit Mode";
-    modeTextSize = scaleTextSize(33);
+    super();
+    textSize(60);
+    currentMode = new Message(width * 0.5, textAscent() + textDescent(), 60, CENTER, CENTER, "Edit Mode");
 
+    notifySystem = new NotificationSystem();
     layers = new ArrayList<DrawingArea>();
     uiArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
 
@@ -30,11 +31,10 @@ class Main extends IntangibleObject {
     background(palette.get("Background"));
     doState(false);
     uiArea.display();
-
+    notifySystem.blit();
+    
     setColour("White");
-    textAlign(CENTER, CENTER);
-    textSize(modeTextSize);
-    text(currentMode, width * 0.5, textAscent() + textDescent());
+    currentMode.display();
   }
 
   void addLayer() {
@@ -47,7 +47,7 @@ class Main extends IntangibleObject {
   }
 
   void doState(Boolean justUpdate) {
-    switch(currentMode) {
+    switch(currentMode.message) {
       case "Edit Mode":
       DrawingArea layer = layers.get(layers.size() - 1);
       if (justUpdate) {
@@ -64,6 +64,10 @@ class Main extends IntangibleObject {
       default:
       crash();
     }
+  }
+  
+  void announce(String announcement) {
+    notifySystem.notify(announcement);
   }
 
   void loopThroughLayers(Boolean justUpdate) {

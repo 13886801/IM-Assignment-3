@@ -3,7 +3,7 @@ class DrawingArea extends InteractableObject {
   float locationSize; //The size of the circle
   
   DrawingArea(float x, float y, int w, int h) {
-    super(false, x, y, w, h);
+    super(x, y, w, h);
     
     polygons = new ArrayList<Polygon>();
     locationSize = 15;

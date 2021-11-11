@@ -10,7 +10,7 @@ class Polygon extends TangibleObject {
   int tick; //Number of times update has been called.
   
   Polygon(float x, float y) {
-    super(false, x, y);
+    super(x, y);
     sideCount = int(random(3, 11));
     radius = 30; //Starting value of radius.
     

@@ -7,33 +7,30 @@ Entity (Parent)
         NonInteractableObject - The object has a bounding box 
           InteractableObject - The object has mouse collision detection 
 */
+
 interface Entity {
   void update(); //Called every frame before display. Updates variables
   void display(); //Called every frame. Displays objects on the screen.
-  void doInput(); //Called on entities that set keyboardbindable to true. It is final.
-  void blit(); //Lazy procedure but can be overridden
 }
 
 abstract class IntangibleObject implements Entity {
   protected HashMap<String, Integer> palette; //color() is actually an integer.
   
-  IntangibleObject(Boolean keyboardBindable) {
+  IntangibleObject() {
     palette = new HashMap<String, Integer>();
     palette.put("Black", color(0, 0, 0));
     palette.put("White", color(255, 255, 255));
     palette.put("Invisible", color(255, 255, 255, 0));
-    if (keyboardBindable) {
-      keyExecutor.add(this);
+    
+    if (this instanceof KeyboardComponent) {
+      keyExecutor.add((KeyboardComponent)this);
     }
   }
   
-  @Override void blit() {
+  //Lazy method that can be overidden.
+  void blit() {
     update();
     display();
-  }
-  
-  void doInput() {
-    println("No input set for: " + getClass().getName());
   }
   
   //Set the colour and outline, it is final and thus cannot be changed.
@@ -51,8 +48,8 @@ abstract class IntangibleObject implements Entity {
 
 abstract class TangibleObject extends IntangibleObject {
   PVector pos; //The position of the object
-  TangibleObject(Boolean keyboardBindable, float x, float y) {
-    super(keyboardBindable);
+  TangibleObject(float x, float y) {
+    super();
     pos = new PVector(x, y);
   }
 }
@@ -61,8 +58,8 @@ abstract class NonInteractableObject extends TangibleObject {
   float w; //Width of the bounding box of the object
   float h; //Height of the bounding box of the object
   
-  NonInteractableObject(Boolean keyboardBindable, float x, float y, float w, float h) {
-    super(keyboardBindable, x, y);
+  NonInteractableObject(float x, float y, float w, float h) {
+    super(x, y);
     this.w = w;
     this.h = h;
   }
@@ -72,8 +69,8 @@ abstract class InteractableObject extends NonInteractableObject {
   protected boolean isHovering;
   protected boolean isClicked;
   
-  InteractableObject(Boolean keyboardBindable, float x, float y, float w, float h) {
-    super(keyboardBindable, x, y, w, h);
+  InteractableObject(float x, float y, float w, float h) {
+    super(x, y, w, h);
     isHovering = false;
   }
   

@@ -2,7 +2,7 @@
 NOTE:
   - This only works on Processing 4.
   - This program scales according to your screen resolution.
-    - The text however does not scale properly! Algorithms were made to "try" to scale.
+    - The text however does not scale properly. However, algorithms were made to "try" to scale.
       - Most resolution should be fine. A safe resolution would be: size(1366, 768)
     - The program takes 80% of your screen resolution (both width and height)
       - During development, the program scaled to size(2189, 1459).
@@ -10,8 +10,10 @@ NOTE:
 Inspiration: The parallax effect used in games.
 */
 
+import java.util.Iterator;
+
 HashMap<Character, Boolean> keyStates; //Keeps track of the states for all the keyboard keys.
-ArrayList<Entity> keyExecutor; //Executes all things added into the list.
+ArrayList<KeyboardComponent> keyExecutor; //Executes all things added into the list.
 PVector mousePos; //The position of the mouse
 HashMap<String, Boolean> mouseState; //The state of the mouse
 
@@ -29,7 +31,7 @@ void settings() { //Allows the size of the canvas to be a variable.
 
 void setup() {
   keyStates = new HashMap<Character, Boolean>();
-  keyExecutor = new ArrayList<Entity>();
+  keyExecutor = new ArrayList<KeyboardComponent>();
   
   mouseState = new HashMap<String, Boolean>();
   mouseState.put("Left Hold", false);

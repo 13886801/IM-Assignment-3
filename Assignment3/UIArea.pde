@@ -2,8 +2,8 @@ abstract class UIArea extends InteractableObject {
   protected HashMap<String, Button> buttons;
   protected Button btnTextRef;
   
-  UIArea(Boolean keyboardBindable, float x, float y, float w, float h) {
-    super(keyboardBindable, x, y, w, h);
+  UIArea(float x, float y, float w, float h) {
+    super(x, y, w, h);
     buttons = new HashMap<String, Button>();
     
     palette.put("UI", color(32, 34, 37)); //Slightly lighter than background.
@@ -28,23 +28,23 @@ abstract class UIArea extends InteractableObject {
   }
 }
 
-class CommandArea extends UIArea {
-  private float fontSize;
-  
+class CommandArea extends UIArea implements KeyboardComponent {
   private Boolean isMinimised;
   private float offsetY;
   
-  private String headText;
+  private Message headText;
   
   CommandArea(float x, float y, float w, float h) {
-    super(true, x, y, w, h);
+    super(x, y, w, h);
     isMinimised = false;
     offsetY = h * 0.8;
-    headText = "Space to minimise";
+    
+    float fontSize = 40;
+    headText = new Message(pos.x + w * 0.5, pos.y, 40, CENTER, TOP, "Space to minimise");
     
     PVector btnOrigin = new PVector(x + w * 0.03, y + h * 0.2);
     float btnYIncrement = h * 0.2;
-    fontSize = scaleTextSize(40);
+    
     String btnInfo[][] = {
       {"How to use", "<This is a tutorial button.>"},
       {"New layer", "Adds a new layer hiding the previous layer. Better for performance. Have at least 10 shapes per layer."},
@@ -77,9 +77,7 @@ class CommandArea extends UIArea {
     rect(pos.x, pos.y, w + 1, h - offsetY); //+ 1 to account for previous rect's 1px stroke.
     
     setColour("White");
-    textSize(fontSize);
-    textAlign(CENTER, TOP);
-    text(headText, pos.x + w * 0.5, pos.y); 
+    headText.display();
     
     if (isMinimised) {
       return;
@@ -95,23 +93,31 @@ class CommandArea extends UIArea {
   }
   
   @Override void doInput() {
-    if (keyStates.get(' ')) {
+    if (checkKey(' ')) {
       pos.y += isMinimised ? -offsetY : offsetY;
       isMinimised = !isMinimised;
-      headText = "Space to " + (isMinimised ? "maximise" : "minimise");
+      headText.pos.y = pos.y;
+      headText.message = "Space to " + (isMinimised ? "maximise" : "minimise");
     }
   }
   
   void doCommand(String command) {
     switch (command) {
       case "New layer":
-      if (main.layers.get(main.layers.size() - 1).polygons.size() >= 10) {
+      int polyCount = main.layers.get(main.layers.size() - 1).polygons.size();
+      if (polyCount >= 10) {
         main.addLayer();
+      } else {
+        main.announce("Not enough polygons in layer, add " + (10 - polyCount) + " more.");
       }
       return;
       
       case "Toggle parallax mode":
-      println("Ok");
+      main.announce(command + " has yet to be implemented");
+      return;
+      
+      case "Finish drawing":
+      main.announce(command + " has yet to be implemented");
       return;
       
       default:

@@ -2,36 +2,32 @@
 Button class that when clicked shall relay it's action to main itself.
 */
 class Button extends InteractableObject {
-  UIArea UIRef; //The UIArea type variable it is attached to.
+  protected UIArea UIRef; //The UIArea type variable it is attached to.
   
-  String label; //The label of the button
-  float labelSize; //The size of the font of the label.
-  
-  String hoverInfo; //The information that displays what this button does.
-  float hoverInfoSize; //Size of the text.
+  protected Message buttonLabel; //The label of the button
+  protected String hoverInfo; //The information that displays what this button does.
+  protected float hoverInfoSize; //Size of the text.
   
   Button(UIArea UIRef, float x, float y, float size, String label) {
-    super(false, x, y, 0, 0);
+    super(x, y, 0, 0);
     this.UIRef = UIRef;
-    this.label = label;
+    buttonLabel = new Message(x, y, size, LEFT, TOP, label);
     hoverInfo = "";
     
-    labelSize = size; //Size is already rescaled
-    hoverInfoSize = scaleTextSize(30);
-    textSize(labelSize);
+    textSize(this.buttonLabel.messageSize);
     w = textWidth(label); //Simulated font width
     h = textAscent() + textDescent();
     
     palette.put("Body", color(88, 101, 242));
     palette.put("Hover", color(59, 165, 93));
+    
+    hoverInfoSize = scaleTextSize(30);
     textSize(hoverInfoSize); //Fixes a visual bug?? Might be from my laptop...
   }
   
   @Override void display() {
     setColour(isHovering ? "Hover" : "White");
-    textAlign(LEFT, TOP);
-    textSize(labelSize);
-    text(label, pos.x, pos.y);
+    buttonLabel.display();
     
     if (!isHovering || hoverInfo.equals("")) {
       return;
@@ -53,7 +49,7 @@ class Button extends InteractableObject {
     
     textSize(hoverInfoSize);
     float lineWidth = infoW * 0.8;
-    int lines = ceil(textWidth(hoverInfo) / lineWidth);
+    int lines = ceil(textWidth(hoverInfo) / lineWidth) + 1;
     float rectH = h * lines * 1.1;
     
     float rectY = mouseY - rectH - (mouseY - triY);
@@ -65,7 +61,7 @@ class Button extends InteractableObject {
   }
   
   void doAction() { //Meant to be overidden for any children
-    UIRef.doCommand(label);
+    UIRef.doCommand(buttonLabel.message);
   }
   
   void setHoverInfo(String text) {
@@ -110,8 +106,10 @@ class TutorialButton extends DynamicInfoTextButton {
     super(UIRef, x, y, size, label);
     addPage("Click this button to cycle through the pages on how to use it.");
     addPage("Left/right click in the space above to place shapes around. The type of click sets the rotation direction.");
-    addPage("Once there are at least 10 shapes, you can start a new layer.");
-    addPage("Repeat 2 and 3 at least 3 times. Once done, click finish drawing to see the accumulated result.");
+    addPage("Start a new layer where there is at least 10 shapes.");
+    addPage("When there is at least 3 layers, click finish drawing to see the accumulated result.");
+    addPage("At any point, feel free to toggle parallax mode. Note, no shapes can be added in this mode.");
+    addPage("At any point, press space to minimize/maximise this menu.");
     doAction();
   }
   

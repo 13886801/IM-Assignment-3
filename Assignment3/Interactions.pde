@@ -28,7 +28,7 @@ void keyPressed() {
   }
   
   keyStates.put(key, true);
-  for (Entity actor : keyExecutor) {
+  for (KeyboardComponent actor : keyExecutor) {
     actor.doInput();  
   }
 }
