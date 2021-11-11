@@ -16,8 +16,8 @@ class Button extends InteractableObject {
     this.label = label;
     hoverInfo = "";
     
-    labelSize = size;
-    hoverInfoSize = 30;
+    labelSize = size; //Size is already rescaled
+    hoverInfoSize = scaleTextSize(30);
     textSize(labelSize);
     w = textWidth(label); //Simulated font width
     h = textAscent() + textDescent();

@@ -17,3 +17,10 @@ void getDeltaTime() {
 Integer randColour() {
   return color(random(256), random(256), random(256));
 }
+
+//Returns a text size that scaled according to the screen size.
+float scaleTextSize(float OriginalSize) {
+  float size = OriginalSize;
+  size *= width / OWidth;
+  return size;
+}

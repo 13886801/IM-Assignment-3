@@ -44,7 +44,7 @@ class CommandArea extends UIArea {
     
     PVector btnOrigin = new PVector(x + w * 0.03, y + h * 0.2);
     float btnYIncrement = h * 0.2;
-    fontSize = 50;
+    fontSize = scaleTextSize(40);
     String btnInfo[][] = {
       {"How to use", "<This is a tutorial button.>"},
       {"New layer", "Adds a new layer hiding the previous layer. Better for performance. Have at least 10 shapes per layer."},

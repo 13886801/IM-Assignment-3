@@ -78,8 +78,8 @@ abstract class InteractableObject extends NonInteractableObject {
   }
   
   @Override void update() {
-    isHovering = mouseOver();
-    if (isHovering && mouseState.get("Raycast")) {
+    isHovering = mouseOver() && mouseState.get("Raycast");
+    if (isHovering) {
       mouseState.put("Raycast", false);
       doHover();
       
