@@ -21,3 +21,18 @@ void mouseReleased() {
       return;
   }
 }
+
+void keyPressed() {
+  if (keyStates.containsKey(key) && keyStates.get(key)) { //Ensures that the held button does not execute more than once.
+    return;
+  }
+  
+  keyStates.put(key, true);
+  for (Entity actor : keyExecutor) {
+    actor.doInput();  
+  }
+}
+
+void keyReleased() {
+  keyStates.put(key, false);
+}

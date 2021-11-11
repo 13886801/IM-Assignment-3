@@ -1,11 +1,9 @@
 class DrawingArea extends InteractableObject {
-  PGraphics area;
-  ArrayList<Polygon> polygons;
-  float locationSize;
+  ArrayList<Polygon> polygons; //The polygons in the area
+  float locationSize; //The size of the circle
   
   DrawingArea(float x, float y, int w, int h) {
-    super(x, y, w, h);
-    area = createGraphics(w, h);
+    super(false, x, y, w, h);
     
     polygons = new ArrayList<Polygon>();
     locationSize = 15;
@@ -14,7 +12,7 @@ class DrawingArea extends InteractableObject {
   }
   
   @Override boolean isClickedCheck() {
-    return isHovering && mouseState.get("Left Click") || mouseState.get("Right Click");
+    return mouseState.get("Left Click") || mouseState.get("Right Click");
   }
   
   @Override void update() {
@@ -31,22 +29,14 @@ class DrawingArea extends InteractableObject {
   }
   
   @Override void display() {
-    area.beginDraw();
-    
-    area.background(palette.get("Invisible"));
-    area.fill(palette.get("Light Gray"));
     for (Polygon shapes : polygons) {
       shapes.display();
     }
     
     if (isHovering) { //When hovering in the area
-      area.fill(palette.get("Light Gray"));
-      area.circle(mouseX, mouseY, locationSize);
+      setColour("Light Gray");
+      circle(mouseX, mouseY, locationSize);
     }
-    
-    area.endDraw();
-    
-    image(area, pos.x, pos.y);
   }
   
   void clearArea() {

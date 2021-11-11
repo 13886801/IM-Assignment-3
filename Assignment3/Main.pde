@@ -2,57 +2,74 @@
 There should only be one.
 */
 class Main extends IntangibleObject {
-  ArrayList<DrawingArea> layers;
+  private ArrayList<DrawingArea> layers;
   private UIArea uiArea;
-  
+  private String currentMode;
   
   Main() {
-    super();
+    super(false);
     layers = new ArrayList<DrawingArea>();
-    AddLayer();
-    uiArea = new UIArea(0, height * 0.8, width, height * 0.2);
+    addLayer();
+    
+    currentMode = "Edit";
+    
+    uiArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
     
     palette.put("Background", color(24, 25, 28)); //Nearly black
   }
   
   @Override void update() {
-    for (DrawingArea area : layers) {
-      area.update();
-    }
-    
     uiArea.update();
+    
+    switch(currentMode) {
+      case "Edit":
+      layers.get(layers.size() - 1).update();
+      break;
+      
+      case "Fly":
+      loopThroughLayers(true);
+      break;
+      
+      default:
+      crash();
+    }
   }
   
   @Override void display() {
     background(palette.get("Background"));
-    for (DrawingArea area : layers) {
-      area.display();
+    
+    switch(currentMode) {
+      case "Edit":
+      layers.get(layers.size() - 1).display();
+      break;
+      
+      case "Fly":
+      loopThroughLayers(false);
+      break;
+      
+      default:
+      crash();
     }
     
     uiArea.display();
   }
   
-  void AddLayer() {
-    layers.add(new DrawingArea(0, 0, width, round(height * 0.8)));
+  void addLayer() {
+    layers.add(new DrawingArea(0, 0, width, height));
   }
   
-  void doCommand(String command) {
-    switch (command) {
-      case "How to use":
-      uiArea.cycleTutorial();
-      return;
-      
-      case "Clear":
-      layers.get(layers.size() - 1).clearArea();
-      return;
-      
-      case "Generate parallax":
-      println("Ok");
-      return;
-      
-      default:
-      println("Unknown command: " + command);
-      return;
+  void crash() {
+    println("Unknown mode! " + currentMode);
+    exit();
+  }
+  
+  void loopThroughLayers(Boolean justUpdate) {
+    for (DrawingArea area : layers) {
+      if (justUpdate) {
+        area.update();
+      } else {
+        area.display();
+      }
     }
   }
 }

@@ -4,9 +4,12 @@ NOTE: This only works on Processing 4.
 Inspiration: The parallax effect used in games.
 */
 
-Main main;
+HashMap<Character, Boolean> keyStates; //Keeps track of the states for all the keyboard keys.
+ArrayList<Entity> keyExecutor; //Executes all things added into the list.
 PVector mousePos; //The position of the mouse
 HashMap<String, Boolean> mouseState; //The state of the mouse
+
+Main main;
 
 float deltaTime; //Time since last draw loop (iteration)
 long time; //Time since program started
@@ -16,19 +19,20 @@ void settings() { //Allows the size of the canvas to be a variable.
 }
 
 void setup() {
-  main = new Main();
+  keyStates = new HashMap<Character, Boolean>();
+  keyExecutor = new ArrayList<Entity>();
+  
   mouseState = new HashMap<String, Boolean>();
   mouseState.put("Left Hold", false);
   mouseState.put("Right Hold", false);
   mouseState.put("Moved", false);
   updateMouseStates();
-  noStroke();
+  
+  main = new Main();
 }
 
 void draw() {
   main.blit(); //The main update function.
   updateMouseStates(); //Ensures certain mouse states.
   getDeltaTime(); //Get the time since last loop.
-  
-  println("Number of shapes: " + main.layers.get(0).polygons.size() + " The framerate: " + frameRate);                                    //DEBUG: Simply prints the framerate, get rid of this later
 }

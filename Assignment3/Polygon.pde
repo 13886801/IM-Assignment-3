@@ -1,17 +1,17 @@
 class Polygon extends TangibleObject {
-  int sideCount;
-  float radius;
-  PGraphics polygon;
+  int sideCount; //The number of sides on the polygon
+  float radius; //The size of the polygon
   
-  boolean isLeftClick;
-  boolean isFocused;
+  boolean isLeftClick; //When this spawned, was left click held down?
+  boolean isFocused; //Is this polygon currently being focused?
   
-  float rotation;
+  float rotation; //The current rotation of the polygon
   float rotSpd; //Rotation speed, clockwise is positive
+  int tick; //Number of times update has been called.
   
   Polygon(float x, float y) {
-    super(x, y);
-    sideCount = int(random(3, 11)); //TODO: Somehow link this to the UIArea for the sliders.
+    super(false, x, y);
+    sideCount = int(random(3, 11));
     radius = 30; //Starting value of radius.
     
     isLeftClick = mouseState.get("Left Click");
@@ -20,7 +20,8 @@ class Polygon extends TangibleObject {
     rotSpd = random(1) * 360 * (isLeftClick ? -1 : 1);
     rotation = 0;
     
-    palette.put("Random Colour", color(random(256), random(256), random(256)));
+    palette.put("Random Colour 1", randColour());
+    palette.put("Random Colour 2", randColour());
   }
   
   @Override void update() {
@@ -30,25 +31,24 @@ class Polygon extends TangibleObject {
       float newRad = pos.dist(new PVector(mouseX, mouseY));
       radius = min(max(30, newRad), 200);
     }
+    tick++;
   }
   
   @Override void display() {    
     translate(pos.x, pos.y);
     rotate(radians(rotation));
-
-    float theta = 0;
-    fill(palette.get("Random Colour"));
+    fill(lerpColor(palette.get("Random Colour 1"), palette.get("Random Colour 2"), abs(sin(radians(tick)))));
     stroke(palette.get("White"));
     
     beginShape();
+    float theta = 0;
     for (int i = 0; i < sideCount; i++) {
       vertex(cos(theta) * radius, sin(theta) * radius);
       theta += TWO_PI / sideCount;
     }
     endShape(CLOSE);
     
-    noStroke();
-    resetMatrix();//Reset the canvas back to it's original state
+    resetMatrix();//Reset the canvas back to its original state
   }
   
   void newOffsetZ(int z) {
