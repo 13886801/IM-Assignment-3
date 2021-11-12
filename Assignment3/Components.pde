@@ -5,5 +5,5 @@ button.
 */
 
 interface KeyboardComponent {
-  void doInput(char button);
+  void doInput(char button); //Objects that implements this will have this called when a button is pressed.
 }

@@ -20,8 +20,8 @@ class Polygon extends TangibleObject {
     rotSpd = random(1) * 360 * (isLeftClick ? -1 : 1);
     rotation = 0;
     
-    pos.z = main.z + random(15);
-    main.z = pos.z;
+    pos.z = main.currentZ + random(15);
+    main.currentZ = pos.z;
     
     palette.put("Random Colour 1", randColour());
     palette.put("Random Colour 2", randColour());
@@ -45,12 +45,12 @@ class Polygon extends TangibleObject {
       break;
       
       case "Ending Mode":
-      if (main.z < pos.z || pos.z < main.flyZ) {
+      if (main.currentZ < pos.z || pos.z < main.frontZ) {
         return;
       }
             
       case "Parallax Mode":
-      float divZ = main.z - pos.z;
+      float divZ = main.currentZ - pos.z;
       divZ = divZ == 0 ? 1 : divZ;
       float offsetX = (main.parallaxMouse.x - pos.x) / divZ;
       float offsetY = (main.parallaxMouse.y - pos.y) / divZ;

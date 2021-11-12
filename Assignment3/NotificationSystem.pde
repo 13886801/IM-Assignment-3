@@ -1,5 +1,9 @@
+/*
+The notification system simply manages all the notifications in the program.
+It displays all the notifications on the screen. 
+*/
 class NotificationSystem extends IntangibleObject {
-  private ArrayList<Notification> notifications;
+  private ArrayList<Notification> notifications; //A list of all the notification.
   
   NotificationSystem() {
     super();
@@ -37,6 +41,9 @@ class NotificationSystem extends IntangibleObject {
   }
 }
 
+/*
+This is the standard text. It just autoscales the text it is given.
+*/
 class Message extends TangibleObject {
   float messageSize;
   String message;
@@ -45,7 +52,7 @@ class Message extends TangibleObject {
   
   Message(float x, float y, float fontSize, int align1, int align2, String msg) {
     super(x, y);
-    messageSize = fontSize;
+    messageSize = scaleTextSize(fontSize);
     message = msg;
     alignA = align1;
     alignB = align2;

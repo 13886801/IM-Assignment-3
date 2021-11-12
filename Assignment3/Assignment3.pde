@@ -10,14 +10,14 @@ NOTE:
 Inspiration: The parallax effect used in games.
 */
 
-import java.util.Iterator;
+import java.util.Iterator; //Needed to iterate through the arraylist and delete references.
 
 HashMap<Character, Boolean> keyStates; //Keeps track of the states for all the keyboard keys.
 ArrayList<KeyboardComponent> keyExecutor; //Executes all things added into the list.
 PVector mousePos; //The position of the mouse
 HashMap<String, Boolean> mouseState; //The state of the mouse
 
-Main main;
+Main main; //The main program
 
 float deltaTime; //Time since last draw loop (iteration)
 long time; //Time since program started
@@ -25,7 +25,7 @@ long time; //Time since program started
 //The program was created with 80% of the screen width, this is used to scale to support other resolutions
 final float OWidth = 2189;
 
-void settings() { //Allows the size of the canvas to be a variable.
+void settings() { //Allows the size of the canvas to be a variable. Scales accoring to screen resolution.
   size(round(displayWidth * 0.8), round(displayHeight * 0.8));
 }
 

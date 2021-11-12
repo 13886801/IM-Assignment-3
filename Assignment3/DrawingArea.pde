@@ -37,7 +37,7 @@ class DrawingArea extends InteractableObject {
     while (itr.hasNext()) {
       Polygon shape = (Polygon)itr.next();
       shape.display();
-      if (main.z < shape.pos.z) {
+      if (main.currentZ < shape.pos.z) {
         itr.remove();
       }
     }

@@ -28,8 +28,3 @@ float scaleTextSize(float OriginalSize) {
   size *= width / OWidth;
   return size;
 }
-
-//Check for the key's state on the keyboard
-boolean checkKey(char button) {
-  return keyStates.containsKey(button) && keyStates.get(button);  
-}

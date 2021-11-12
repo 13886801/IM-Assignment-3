@@ -17,17 +17,18 @@ abstract class IntangibleObject implements Entity {
   protected HashMap<String, Integer> palette; //color() is actually an integer.
   
   IntangibleObject() {
-    palette = new HashMap<String, Integer>();
+    palette = new HashMap<String, Integer>(); //All objects that inherits this, has these base colours.
     palette.put("Black", color(0, 0, 0));
     palette.put("White", color(255, 255, 255));
     palette.put("Invisible", color(255, 255, 255, 0));
     
-    if (this instanceof KeyboardComponent) {
-      keyExecutor.add((KeyboardComponent)this);
+    if (this instanceof KeyboardComponent) { //Check if child that inherited this, has KeyboardComponent
+      keyExecutor.add((KeyboardComponent)this); //Auto setup the child to have doInput() be called when a button is pressed.
     }
   }
   
   //Lazy method that can be overidden.
+  //Simply can call blit to do both update and display as they are usually called right after each other.
   void blit() {
     update();
     display();
@@ -66,8 +67,8 @@ abstract class NonInteractableObject extends TangibleObject {
 }
 
 abstract class InteractableObject extends NonInteractableObject {
-  protected boolean isHovering;
-  protected boolean isClicked;
+  protected boolean isHovering; //Is the mouse hovering over the boundary box?
+  protected boolean isClicked; //Did the mouse get clicked while being inside the boundary box?
   
   InteractableObject(float x, float y, float w, float h) {
     super(x, y, w, h);
@@ -77,7 +78,7 @@ abstract class InteractableObject extends NonInteractableObject {
   @Override void update() {
     isHovering = isHoverCheck();
     if (isHovering) {
-      mouseState.put("Raycast", false);
+      mouseState.put("Raycast", false); //In case two buttons are on top of each other.
       doHover();
       
       isClicked = isClickedCheck();

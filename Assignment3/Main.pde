@@ -12,14 +12,16 @@ class Main extends IntangibleObject {
   float mouseSensitivity; //Multiplier for polygon movement in parallax mode.
   Message sensitivity;
   
-  float z; //The z-space
-  float flyZ;
+  float currentZ; //The accumulated z space
+  float frontZ; //The z space in the front of the current Z
+  float zDist; //The distance between frontZ and currentZ
 
   Main() {
     super();
     textSize(60);
-    currentMode = new Message(width * 0.5, textAscent() + textDescent(), 60, CENTER, CENTER, "2D Mode");
-    sensitivity = new Message(width * 0.23, height - textAscent() + textDescent(), 50, LEFT, CENTER, "Sensitivity: " + mouseSensitivity);
+    float textHeight = textAscent() + textDescent();
+    currentMode = new Message(width * 0.5, textHeight, 60, CENTER, CENTER, "2D Mode");
+    sensitivity = new Message(width * 0.23, height - textHeight, 50, LEFT, CENTER, "Sensitivity: " + mouseSensitivity);
     updateSensitivity(100);
     
     notifySystem = new NotificationSystem();
@@ -27,8 +29,9 @@ class Main extends IntangibleObject {
     uiArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
     
     parallaxMouse = new PVector(mouseX, mouseY);
-    z = 0;
-    flyZ = 0;
+    currentZ = 0;
+    zDist = 300;
+    frontZ = 0;
     
     layers.add(new DrawingArea(0, 0, width, height));
 
@@ -116,13 +119,13 @@ class Main extends IntangibleObject {
       return;
     }
     
-    flyZ = z - 333; //The far distance.
+    frontZ = currentZ - zDist; //The far distance.
     currentMode.message = "Ending Mode";
   }
   
   void doEndingMode() {
-    z -= 0.5;
-    flyZ -= 0.5;
+    currentZ -= 0.5;
+    frontZ -= 0.5;
     Iterator itr = layers.iterator();
     while (itr.hasNext()) {
       DrawingArea area = (DrawingArea)itr.next();
