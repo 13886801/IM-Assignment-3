@@ -17,7 +17,7 @@ class NotificationSystem extends IntangibleObject {
     while (itr.hasNext()) {
       Notification notification = (Notification)itr.next();
       notification.update();
-      if (notification.lifespan <= 0) {
+      if (notification.lifespan <= 0 || notifications.size() > 15) {
         itr.remove();
       }
     }

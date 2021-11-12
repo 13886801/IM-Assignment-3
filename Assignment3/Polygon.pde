@@ -20,6 +20,9 @@ class Polygon extends TangibleObject {
     rotSpd = random(1) * 360 * (isLeftClick ? -1 : 1);
     rotation = 0;
     
+    pos.z = main.z + random(15);
+    main.z = pos.z;
+    
     palette.put("Random Colour 1", randColour());
     palette.put("Random Colour 2", randColour());
   }
@@ -28,16 +31,40 @@ class Polygon extends TangibleObject {
     rotation += rotSpd * deltaTime;
     isFocused = isFocused && mouseState.get(isLeftClick ? "Left Hold" : "Right Hold");
     if (isFocused) {
-      float newRad = pos.dist(new PVector(mouseX, mouseY));
-      radius = min(max(30, newRad), 200);
+      float newRad = pos.dist(new PVector(mouseX, mouseY, pos.z));
+      radius = clamp(newRad, 30, 100);
     }
     tick++;
   }
   
-  @Override void display() {    
-    translate(pos.x, pos.y);
+  @Override void display() {
+    PVector location = new PVector();
+    switch(main.currentMode.message) {
+      case "2D Mode":
+      location = pos;
+      break;
+      
+      case "Ending Mode":
+      if (main.z < pos.z || pos.z < main.flyZ) {
+        return;
+      }
+            
+      case "Parallax Mode":
+      float divZ = main.z - pos.z;
+      divZ = divZ == 0 ? 1 : divZ;
+      float offsetX = (main.parallaxMouse.x - pos.x) / divZ;
+      float offsetY = (main.parallaxMouse.y - pos.y) / divZ;
+      
+      location.x = pos.x + offsetX;
+      location.y = pos.y + offsetY;
+      break;
+    }
+    
+    translate(location.x, location.y);
+    
     rotate(radians(rotation));
-    fill(lerpColor(palette.get("Random Colour 1"), palette.get("Random Colour 2"), abs(sin(radians(tick)))));
+    color col = lerpColor(palette.get("Random Colour 1"), palette.get("Random Colour 2"), abs(sin(radians(tick))));
+    fill(col);
     stroke(palette.get("White"));
     
     beginShape();
@@ -49,9 +76,5 @@ class Polygon extends TangibleObject {
     endShape(CLOSE);
     
     resetMatrix();//Reset the canvas back to its original state
-  }
-  
-  void newOffsetZ(int z) {
-    pos.z = z;
   }
 }

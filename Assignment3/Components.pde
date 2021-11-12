@@ -5,5 +5,5 @@ button.
 */
 
 interface KeyboardComponent {
-  void doInput();
+  void doInput(char button);
 }

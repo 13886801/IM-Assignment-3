@@ -18,6 +18,10 @@ Integer randColour() {
   return color(random(256), random(256), random(256));
 }
 
+float clamp(float value, float min, float max) {
+  return min(max, max(min, value));
+}
+
 //Returns a text size that scaled according to the screen size.
 float scaleTextSize(float OriginalSize) {
   float size = OriginalSize;

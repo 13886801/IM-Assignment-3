@@ -12,28 +12,37 @@ class DrawingArea extends InteractableObject {
   }
   
   @Override boolean isClickedCheck() {
-    return mouseState.get("Left Click") || mouseState.get("Right Click");
+    return super.isClickedCheck() || mouseState.get("Right Click");
   }
   
   @Override void update() {
     super.update();
-    if (isClicked) { //Either left or right click.
-      polygons.add(new Polygon(mouseX, mouseY));
+    
+    if (isClicked && !main.currentMode.message.equals("Ending Mode")) { //Either left or right click.
+      if (main.currentMode.message.equals("2D Mode")) {
+        polygons.add(new Polygon(mouseX, mouseY));
+      } else {
+        main.announce("Go back to edit mode to add more shapes.");
+      }
     }
     
     for (int i = 0; i < polygons.size(); i++) {
       Polygon shape = polygons.get(i);
       shape.update();
-      shape.newOffsetZ(polygons.size() - 1 - i);
     }
   }
   
   @Override void display() {
-    for (Polygon shapes : polygons) {
-      shapes.display();
+    Iterator itr = polygons.iterator();
+    while (itr.hasNext()) {
+      Polygon shape = (Polygon)itr.next();
+      shape.display();
+      if (main.z < shape.pos.z) {
+        itr.remove();
+      }
     }
     
-    if (isHovering) { //When hovering in the area
+    if (isHovering && !main.currentMode.message.equals("Ending Mode")) { //When hovering in the area
       setColour("Light Gray");
       circle(mouseX, mouseY, locationSize);
     }

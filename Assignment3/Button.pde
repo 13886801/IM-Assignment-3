@@ -25,11 +25,15 @@ class Button extends InteractableObject {
     textSize(hoverInfoSize); //Fixes a visual bug?? Might be from my laptop...
   }
   
+  @Override boolean isHoverCheck() {
+    return super.isHoverCheck() && !UIRef.isMinimised;
+  }
+  
   @Override void display() {
     setColour(isHovering ? "Hover" : "White");
     buttonLabel.display();
     
-    if (!isHovering || hoverInfo.equals("")) {
+    if (!isHovering || UIRef.isMinimised || hoverInfo.equals("")) {
       return;
     }
     
@@ -109,7 +113,8 @@ class TutorialButton extends DynamicInfoTextButton {
     addPage("Start a new layer where there is at least 10 shapes.");
     addPage("When there is at least 3 layers, click finish drawing to see the accumulated result.");
     addPage("At any point, feel free to toggle parallax mode. Note, no shapes can be added in this mode.");
-    addPage("At any point, press space to minimize/maximise this menu.");
+    addPage("At any point, scroll up and down to adjust the sensitvity of the parallax");
+    addPage("At any point, press space to (un)hide this menu.");
     doAction();
   }
   

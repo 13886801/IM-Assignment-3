@@ -22,6 +22,20 @@ void mouseReleased() {
   }
 }
 
+void mouseWheel(MouseEvent event) {
+  main.updateSensitivity(-event.getCount() * 20);
+}
+
+//Detects if the mouse is on the window or not.
+//Helps get rid of the bug when hovering over a button and leaving the window.
+void mouseEntered() {
+  mouseState.put("OnWindow", true);
+}
+
+void mouseExited() {
+  mouseState.put("OnWindow", false);
+}
+
 void keyPressed() {
   if (keyStates.containsKey(key) && keyStates.get(key)) { //Ensures that the held button does not execute more than once.
     return;
@@ -29,7 +43,7 @@ void keyPressed() {
   
   keyStates.put(key, true);
   for (KeyboardComponent actor : keyExecutor) {
-    actor.doInput();  
+    actor.doInput(key);  
   }
 }
 

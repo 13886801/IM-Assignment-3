@@ -37,6 +37,7 @@ void setup() {
   mouseState.put("Left Hold", false);
   mouseState.put("Right Hold", false);
   mouseState.put("Moved", false);
+  mouseState.put("OnWindow", true);
   updateMouseStates();
   
   main = new Main();

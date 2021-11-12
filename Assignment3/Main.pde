@@ -8,47 +8,63 @@ class Main extends IntangibleObject {
   private ArrayList<DrawingArea> layers;
   private UIArea uiArea;
 
+  PVector parallaxMouse; //The mouse in parallax mode.
+  float mouseSensitivity; //Multiplier for polygon movement in parallax mode.
+  Message sensitivity;
+  
+  float z; //The z-space
+  float flyZ;
+
   Main() {
     super();
     textSize(60);
-    currentMode = new Message(width * 0.5, textAscent() + textDescent(), 60, CENTER, CENTER, "Edit Mode");
-
+    currentMode = new Message(width * 0.5, textAscent() + textDescent(), 60, CENTER, CENTER, "2D Mode");
+    sensitivity = new Message(width * 0.23, height - textAscent() + textDescent(), 50, LEFT, CENTER, "Sensitivity: " + mouseSensitivity);
+    updateSensitivity(100);
+    
     notifySystem = new NotificationSystem();
     layers = new ArrayList<DrawingArea>();
     uiArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
-
-    addLayer();
+    
+    parallaxMouse = new PVector(mouseX, mouseY);
+    z = 0;
+    flyZ = 0;
+    
+    layers.add(new DrawingArea(0, 0, width, height));
 
     palette.put("Background", color(24, 25, 28)); //Nearly black
   }
 
   @Override void update() {
-    uiArea.update();
+    if (!currentMode.message.equals("Ending Mode")) {
+      uiArea.update();
+    }
+    
+    
+    if (!currentMode.message.equals("2D Mode")) {
+      parallaxMouse = new PVector((mouseX - width * 0.5) * mouseSensitivity, (mouseY - height * 0.5) * mouseSensitivity);
+    }
+    
     doState(true);
   }
 
   @Override void display() {
     background(palette.get("Background"));
     doState(false);
-    uiArea.display();
-    notifySystem.blit();
+    if (!currentMode.message.equals("Ending Mode")) {
+      uiArea.display();
+      notifySystem.blit();
+    }
     
     setColour("White");
     currentMode.display();
-  }
-
-  void addLayer() {
-    layers.add(new DrawingArea(0, 0, width, height));
-  }
-
-  void crash() {
-    println("Unknown mode! " + currentMode);
-    exit();
+    sensitivity.display();
   }
 
   void doState(Boolean justUpdate) {
     switch(currentMode.message) {
-      case "Edit Mode":
+      case "2D Mode":
+      case "Parallax Mode":
       DrawingArea layer = layers.get(layers.size() - 1);
       if (justUpdate) {
         layer.update();
@@ -58,7 +74,7 @@ class Main extends IntangibleObject {
       break;
 
       case "Ending Mode":
-      loopThroughLayers(justUpdate);
+      doEndingMode();
       break;
 
       default:
@@ -66,17 +82,59 @@ class Main extends IntangibleObject {
     }
   }
   
+  void updateSensitivity(float amount) {
+    mouseSensitivity = clamp(mouseSensitivity + amount, 0, 200);
+    sensitivity.message = "Sensitivity: " + mouseSensitivity;
+  }
+  
   void announce(String announcement) {
     notifySystem.notify(announcement);
   }
-
-  void loopThroughLayers(Boolean justUpdate) {
-    for (DrawingArea area : layers) {
-      if (justUpdate) {
-        area.update();
-      } else {
-        area.display();
+  
+  void crash() {
+    println("Unknown mode! " + currentMode);
+    exit();
+  }
+  
+  void addLayer() {
+    int polyCount = layers.get(main.layers.size() - 1).polygons.size();
+    if (polyCount >= 10) {
+      layers.add(new DrawingArea(0, 0, width, height));
+    } else {
+      main.announce("Not enough polygons in layer, add " + (10 - polyCount) + " more.");
+    }
+  }
+  
+  void finishDrawing() {
+    if (layers.size() < 3) {
+      main.announce("Insufficient number of layers, add " + (3 - layers.size()) + " more.");
+      return;
+    }
+    
+    if (layers.size() == 3 && layers.get(main.layers.size() - 1).polygons.size() < 10) {
+      main.announce("Add 1 more layer or have a minimum of 10 polygons on this layer before finishing.");
+      return;
+    }
+    
+    flyZ = z - 333; //The far distance.
+    currentMode.message = "Ending Mode";
+  }
+  
+  void doEndingMode() {
+    z -= 0.5;
+    flyZ -= 0.5;
+    Iterator itr = layers.iterator();
+    while (itr.hasNext()) {
+      DrawingArea area = (DrawingArea)itr.next();
+      area.blit();
+      if (area.polygons.size() == 0) {
+        itr.remove();
       }
+    }
+    
+    if (layers.size() == 0) {
+      currentMode.message = "2D Mode";
+      layers.add(new DrawingArea(0, 0, width, height));
     }
   }
 }
