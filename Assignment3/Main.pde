@@ -116,6 +116,7 @@ class Main extends IntangibleObject {
       return;
     }
     
+    currentZ += zDist;
     frontZ = currentZ - zDist; //The far distance.
     currentMode.message = "Ending Mode";
   }
