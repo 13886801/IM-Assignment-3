@@ -22,7 +22,7 @@ void mouseReleased() {
   }
 }
 
-void mouseWheel(MouseEvent event) {
+void mouseWheel(MouseEvent event) { //This might get reversed on other platforms
   main.updateSensitivity(-event.getCount() * 20);
 }
 

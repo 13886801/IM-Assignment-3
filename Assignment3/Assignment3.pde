@@ -1,6 +1,6 @@
 /*
 NOTE:
-  - This only works on Processing 4.
+  - This was made on Processing 4, it might not work on processing 3.
   - This program scales according to your screen resolution.
     - The text however does not scale properly. However, algorithms were made to "try" to scale.
       - Most resolution should be fine. A safe resolution would be: size(1366, 768)

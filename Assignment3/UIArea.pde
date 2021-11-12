@@ -41,7 +41,7 @@ class CommandArea extends UIArea implements KeyboardComponent {
     offsetY = h * 0.8;
     
     float fontSize = 40;
-    headText = new Message(pos.x + w * 0.5, pos.y, 40, CENTER, TOP, "Space to minimise");
+    headText = new Message(pos.x + w * 0.5, pos.y, 40, CENTER, TOP, "Space to hide");
     
     PVector btnOrigin = new PVector(x + w * 0.03, y + h * 0.2);
     float btnYIncrement = h * 0.2;
@@ -93,7 +93,7 @@ class CommandArea extends UIArea implements KeyboardComponent {
       pos.y += isMinimised ? -offsetY : offsetY;
       isMinimised = !isMinimised;
       headText.pos.y = pos.y;
-      headText.message = "Space to " + (isMinimised ? "maximise" : "minimise");
+      headText.message = "Space to " + (isMinimised ? "show" : "hide");
       break;
       
       case 'n':
