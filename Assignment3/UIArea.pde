@@ -14,12 +14,12 @@ abstract class UIArea extends InteractableObject {
   
   @Override void update() {
     super.update();
-    mouseState.put("Raycast", true);
     btnTextRef = null;
+    mouseState.put("Raycast", true);
     for (HashMap.Entry<String, Button> button : buttons.entrySet()) {
       button.getValue().update();
     }
-    mouseState.put("Raycast", mouseState.get("Raycast") &&!isHovering);
+    mouseState.put("Raycast", mouseState.get("Raycast") && !isHovering);
   }
   
   protected void doCommand(String command) {} //Meant to be overridden
@@ -88,6 +88,10 @@ class CommandArea extends UIArea implements KeyboardComponent {
   }
   
   @Override void doInput(char button) {
+    if (main.currentMode.message.equals("Ending Mode")) {
+      return;
+    }
+    
     switch (button) {
       case ' ':
       pos.y += isMinimised ? -offsetY : offsetY;
@@ -111,6 +115,10 @@ class CommandArea extends UIArea implements KeyboardComponent {
   }
   
   void doCommand(String command) {
+    if (main.currentMode.message.equals("Ending Mode")) {
+      return;
+    }
+    
     switch (command) {
       case "New layer (n)":
       main.addLayer();

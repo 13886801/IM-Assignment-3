@@ -6,7 +6,7 @@ class Main extends IntangibleObject {
 
   private NotificationSystem notifySystem;
   private ArrayList<DrawingArea> layers;
-  private UIArea uiArea;
+  private CommandArea commandArea;
 
   PVector parallaxMouse; //The mouse in parallax mode.
   float mouseSensitivity; //Multiplier for polygon movement in parallax mode.
@@ -26,7 +26,7 @@ class Main extends IntangibleObject {
     
     notifySystem = new NotificationSystem();
     layers = new ArrayList<DrawingArea>();
-    uiArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
+    commandArea = new CommandArea(0, height * 0.8, width * 0.2, height * 0.2);
     
     parallaxMouse = new PVector(mouseX, mouseY);
     currentZ = 0;
@@ -39,10 +39,7 @@ class Main extends IntangibleObject {
   }
 
   @Override void update() {
-    if (!currentMode.message.equals("Ending Mode")) {
-      uiArea.update();
-    }
-    
+    commandArea.update();
     
     if (!currentMode.message.equals("2D Mode")) {
       parallaxMouse = new PVector((mouseX - width * 0.5) * mouseSensitivity, (mouseY - height * 0.5) * mouseSensitivity);
@@ -55,7 +52,7 @@ class Main extends IntangibleObject {
     background(palette.get("Background"));
     doState(false);
     if (!currentMode.message.equals("Ending Mode")) {
-      uiArea.display();
+      commandArea.display();
       notifySystem.blit();
     }
     
